@@ -59,6 +59,8 @@ public boolean canConstruct(String ransomNote, String magazine) {
 
 需要注意的就是，如何进行去重，还有双指针是怎么移动的。
 
+还有要注意裁枝处理！！
+
 ```java
 public List<List<Integer>> threeSum(int[] nums) {
     Arrays.sort(nums);
@@ -71,6 +73,11 @@ public List<List<Integer>> threeSum(int[] nums) {
 
     // i最多走到倒数第三位数
     for (int i = 0; i < nums.length - 2; i++) {
+        // 裁枝处理，一定要做这个处理，不然 int溢出的情况无法判断
+        if (nums[i] >0) {
+            break;
+        }
+
         // 可以想象一下，如果i--跟i的数值相同，i--肯定已经把后面的情况包括进去了
         while (i > 0 && i < nums.length && nums[i] == nums[i - 1]) {
             i++;
@@ -83,7 +90,7 @@ public List<List<Integer>> threeSum(int[] nums) {
             sum = nums[i] + nums[left] + nums[right];
             if (sum == 0) {
                 result.add(Arrays.asList(nums[i], nums[left], nums[right]));
-                
+
                 // 重复的数是不需要加进去的
                 // 左指针向右边移动
                 while (nums[left] == nums[left + 1] && left < right) {
@@ -93,7 +100,7 @@ public List<List<Integer>> threeSum(int[] nums) {
                 while (nums[right] == nums[right - 1] && left < right) {
                     right--;
                 }
-                
+
                 // 一定要放在后面，用例可能能过，但是想象一下放前面，可能存在漏结果的情况
                 left++;
                 right--;
@@ -104,7 +111,7 @@ public List<List<Integer>> threeSum(int[] nums) {
             }
         }
     }
-    
+
     return result;
 }
 ```
@@ -117,21 +124,23 @@ public List<List<Integer>> threeSum(int[] nums) {
 
 ![image-20230307170535127](C:\Users\zeyu.lin\AppData\Roaming\Typora\typora-user-images\image-20230307170535127.png)
 
+还有要注意裁枝处理！！
+
 ```java
 public List<List<Integer>> fourSum(int[] nums, int target) {
     Arrays.sort(nums);
     List<List<Integer>> result = new ArrayList<>();
-    // 要额外判断溢出的情况
-    if (target == -294967296) {
-        return result;
-    }
     int sum;
     int left;
     int right;
 
-    // -5 -4 -2 -2 -2 -1 0 0 1
-    // -2,-1,-1,1,1,2,2
     for (int i = 0; i < nums.length - 3; i++) {
+        // 裁枝处理，一定要做这个处理，不然 int溢出的情况无法判断
+        // 用例：[1000000000,1000000000,1000000000,1000000000] -294967296
+        if (nums[i] > 0 && nums[i] > target) {
+            break;
+        }
+
         while (i > 0 && i < nums.length - 3 && nums[i] == nums[i - 1]) {
             i++;
         }
